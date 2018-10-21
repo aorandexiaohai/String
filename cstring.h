@@ -25,4 +25,6 @@ int compare_string(const char *str1, const char *str2);
 int **find_string(const char *origin_str, const char *str);
 char *replace_string(const char *origin_str, const char *old_str, const char *new_str);
 
+char** spliter_string(const char* origin_str, const char *str, int need_spliters);
+
 #endif //__CSTRING_H_

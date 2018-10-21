@@ -13,6 +13,16 @@ int find_char(const char* str, char c)
     }
     return -1;
 }
+int GetPtoPLength(void** pp)
+{
+    assert(pp);
+    int index = 0;
+    while(pp[index])
+    {
+        index++;
+    }
+    return index;
+}
 
 char *trim_str_string(const char *str, char* trim_str)
 {
@@ -199,6 +209,29 @@ char *replace_string(const char *origin_str, const char *old_str, const char *ne
         free(head_str);
     } while (1);
     assert(locations);
+    DeletePtoP(locations, int);
+    return result;
+}
+
+
+char** spliter_string(const char* origin_str, const char *str, int need_spliters)
+{
+    assert(origin_str && str);
+    int** locations = find_string(origin_str, str);
+    int len = GetPtoPLength(locations);
+    int min_len = (len+1) < need_spliters ? (len+1) : need_spliters;
+    char** result = (char**)(malloc(sizeof(char*)*(min_len+1)));
+    result[min_len] = 0;
+    int begin_index = 0;
+    for(int index=0; index<len && index<min_len-1; index++)
+    {
+        int* location = locations[index];
+        // printf("location:%d,%d\n", location[0], location[1]);
+        result = get_string(origin_str, begin_index, location[0]);
+        begin_index = location[1];
+    }
+    // printf("xx%d,%d\n", begin_index, len);
+    result[min_len-1] = get_string(origin_str, begin_index,strlen(origin_str));
     DeletePtoP(locations, int);
     return result;
 }
