@@ -94,12 +94,32 @@ int main()
         }
         freeStringStringMap(ssm);
     }
+    //{
+    //    char** res = spliter_string(" 1 2 3"," ", 5);
+    //    int len = GetPtoPLengthChar(res);
+    //    for(int index=0; index<len; index++)
+    //    {
+    //        printf("%s\n", res[index]);
+    //    }
+    //    DeletePtoP(res, char);
+    //}
+    //{
+    //    char** res = spliter_string(" 1 2 3"," ", 2);
+    //    int len = GetPtoPLengthChar(res);
+    //    printf("len:%d\n",len);
+    //    for(int index=0; index<len; index++)
+    //    {
+    //        printf("index:%d|||\t%s\n",index, res[index]);
+    //    }
+    //    DeletePtoP(res, char);
+    //}
     {
-        char** res = spliter_string(" 1 2 3"," ", 5);
+        char** res = spliter_string("xx = xxx=xxxxx","=", 2);
         int len = GetPtoPLengthChar(res);
+        printf("len:%d\n",len);
         for(int index=0; index<len; index++)
         {
-            printf("%s\n", res[index]);
+            printf("index:%d|||\t%s\n",index, res[index]);
         }
         DeletePtoP(res, char);
     }

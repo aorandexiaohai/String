@@ -3,37 +3,43 @@
 #include <assert.h>
 #include "delete_pointer_to_pointer.h"
 
-int find_char(const char* str, char c)
+int find_char(const char *str, char c)
 {
     assert(str);
     int len = strlen(str);
-    for(int index=0; index<len; index++)
+    for (int index = 0; index < len; index++)
     {
-        if(c==str[index]) return index;
+        if (c == str[index])
+            return index;
     }
     return -1;
 }
-int GetPtoPLengthInt(int** pp)
+int GetPtoPLengthInt(int **pp)
 {
     assert(pp);
     int index = 0;
-    while(pp[index])
+    while (pp[index])
     {
         index++;
     }
     return index;
 }
-int GetPtoPLengthChar(char** pp)
+int GetPtoPLengthChar(char **pp)
 {
     assert(pp);
     int index = 0;
-    while(pp[index])
+    while (pp[index])
     {
         index++;
     }
     return index;
 }
-char *trim_str_string(const char *str, char* trim_str)
+char *trim_str_string(const char *str, char *trim_str)
+{
+    return trim_str_optional_string(str, trim_str, 0);
+}
+
+char *trim_str_optional_string(const char *str, char *trim_str, int reverse)
 {
     assert(str && trim_str);
 
@@ -42,25 +48,40 @@ char *trim_str_string(const char *str, char* trim_str)
     int end_index = len - 1;
     for (begin_index = 0; begin_index < len; ++begin_index)
     {
-        if(find_char(trim_str, str[begin_index]) < 0)
-            break;
+        if (!reverse)
+        {
+            if (find_char(trim_str, str[begin_index]) < 0)
+                break;
+        }
+        else
+        {
+            if (find_char(trim_str, str[begin_index]) >= 0)
+                break;
+        }
     }
     for (end_index = len - 1; end_index >= begin_index; --end_index)
     {
-        if(find_char(trim_str, str[end_index]) < 0)
-            break;
+        if (!reverse)
+        {
+            if (find_char(trim_str, str[end_index]) < 0)
+                break;
+        }
+        else
+        {
+            if (find_char(trim_str, str[end_index]) >= 0)
+                break;
+        }
     }
     if (begin_index > end_index)
         return create_empty_string();
     else
         return get_string(str, begin_index, end_index + 1);
-
 }
 
 char *trim_string(const char *str, char c)
 {
-    char* tmp_str = create_string(c, 1);
-    char* res = trim_str_string(str, tmp_str);
+    char *tmp_str = create_string(c, 1);
+    char *res = trim_str_string(str, tmp_str);
     free(tmp_str);
     return res;
 }
@@ -129,27 +150,37 @@ int compare_string(const char *str1, const char *str2)
     return strcmp(str1, str2);
 }
 
-int **find_string(const char *origin_str, const char *str)
+int **find_range_string(const char *origin_str, int begin, int end, const char *str)
 {
+    int max_len = strlen(origin_str);
+    assert(begin >= 0 && begin <= max_len);
+    assert(end >= begin && end <= max_len);
+
     assert(origin_str && str);
     if (!is_empty_string(str))
     {
         int i_count = 0;
-        int max_len = strlen(origin_str);
 
         {
 
-            for (int begin_index = 0; begin_index < max_len; begin_index++)
+            for (int begin_index = begin; begin_index < end; )
             {
-                for (int end_index = begin_index + 1; end_index <= max_len; end_index++)
+                int flag = 0;
+                for (int end_index = begin_index + 1; end_index <= end; end_index++)
                 {
                     char *tmp_str = get_string(origin_str, begin_index, end_index);
                     if (compare_string(tmp_str, str) == 0)
                     {
                         i_count++;
+                        flag = 1;
+                        begin_index = end_index;
                     }
                     free(tmp_str);
+                    if(flag)
+                        break;
                 }
+                if(!flag)
+                    begin_index++;
             }
         }
         {
@@ -157,9 +188,10 @@ int **find_string(const char *origin_str, const char *str)
             result[i_count] = 0;
             int i_index = 0;
 
-            for (int begin_index = 0; begin_index < max_len; begin_index++)
+            for (int begin_index = begin; begin_index < end; )
             {
-                for (int end_index = begin_index + 1; end_index <= max_len; end_index++)
+                int flag = 0;
+                for (int end_index = begin_index + 1; end_index <= end; end_index++)
                 {
                     char *tmp_str = get_string(origin_str, begin_index, end_index);
                     if (compare_string(tmp_str, str) == 0)
@@ -168,9 +200,15 @@ int **find_string(const char *origin_str, const char *str)
                         result[i_index][0] = begin_index;
                         result[i_index][1] = end_index;
                         i_index++;
+                        begin_index = end_index;
+                        flag =1;
                     }
                     free(tmp_str);
+                    if(flag)
+                        break;
                 }
+                if(!flag)
+                    begin_index++;
             }
             assert(i_index == i_count);
             return result;
@@ -184,6 +222,13 @@ int **find_string(const char *origin_str, const char *str)
     }
     assert(0);
     return 0;
+}
+
+int **find_string(const char *origin_str, const char *str)
+{
+    assert(origin_str && str);
+    int max_len = strlen(origin_str);
+    return find_range_string(origin_str, 0, max_len, str);
 }
 
 char *replace_string(const char *origin_str, const char *old_str, const char *new_str)
@@ -222,24 +267,50 @@ char *replace_string(const char *origin_str, const char *old_str, const char *ne
     return result;
 }
 
+char *int2str(int value)
+{
+    char buffer[100];
+    snprintf(buffer, 100, "%d", value);
+    return clone_string(buffer);
+}
 
-char** spliter_string(const char* origin_str, const char *str, int need_spliters)
+char **spliter_string(const char *origin_str, const char *str, int need_spliters)
 {
     assert(origin_str && str);
-    int** locations = find_string(origin_str, str);
+    int **locations = find_string(origin_str, str);
     // ShowPtoP(locations, int);
     int len = GetPtoPLengthInt(locations);
-    int min_len = (len+1) < need_spliters ? (len+1) : need_spliters;
-    char** result = (char**)(malloc(sizeof(char*)*(min_len+1)));
+    int min_len = (len + 1) < need_spliters ? (len + 1) : need_spliters;
+    if(need_spliters<0)
+        min_len = len + 1;
+    char **result = (char **)(malloc(sizeof(char *) * (min_len + 1)));
     result[min_len] = 0;
     int begin_index = 0;
-    for(int index=0; index<len && index<min_len-1; index++)
+    for (int index = 0; index < len && index < min_len - 1; index++)
     {
-        int* location = locations[index];
+        int *location = locations[index];
         result[index] = get_string(origin_str, begin_index, location[0]);
         begin_index = location[1];
     }
-    result[min_len-1] = get_string(origin_str, begin_index,strlen(origin_str));
+    result[min_len - 1] = get_string(origin_str, begin_index, strlen(origin_str));
     DeletePtoP(locations, int);
+
+    int res_len = GetPtoPLengthChar(result);
+    if (need_spliters>=0 && res_len < need_spliters)
+    {
+        char **new_res = (char **)malloc(sizeof(char *) * (need_spliters + 1));
+        new_res[need_spliters] = 0;
+        for (int index = 0; index < res_len; index++)
+        {
+            new_res[index] = result[index];
+        }
+        for (int index = res_len; index < need_spliters; index++)
+        {
+            new_res[index] = create_empty_string();
+        }
+        free(result);
+        result = new_res;
+    }
+
     return result;
 }
