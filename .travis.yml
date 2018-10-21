@@ -1,0 +1,14 @@
+language: c
+sudo: false # only for faster builds
+compiler:
+- gcc
+os:
+- linux
+script:  
+  - gcc cstring.c -c -std=c99
+
+
+
+notifications:
+  email:
+    - 2663976081@qq.com
