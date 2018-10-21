@@ -29,7 +29,8 @@
 //     }\
 // }
 
-int GetPtoPLength(void** pp);
+int GetPtoPLengthInt(int** pp);
+int GetPtoPLengthChar(char** pp);
 
 
 
