@@ -5,7 +5,12 @@
 #include <stdlib.h>
 #include <assert.h>
 
+//>=0: fount
+//-1: not found
+int find_char(const char* str, char c);
 char *trim_string(const char *str, char c);
+char *trim_str_string(const char *str, char* trim_str);
+
 char *get_string(const char *str, int begin_index, int end_index);
 char *clone_string(const char *str);
 char *cat_string(const char *str1, const char *str2);

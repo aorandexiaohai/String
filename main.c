@@ -1,5 +1,6 @@
 #include "string.h"
 #include <stdio.h>
+#include "map.h"
 int main()
 {
     {
@@ -56,5 +57,39 @@ int main()
         char *res = replace_string("  ", "1234 ", "123");
         printf("%d\n", compare_string(res, "  "));
         free(res);
+    }
+    {
+        struct StringStringMap *ssm = createStringStringMap();
+        setValueStringStringMap(ssm, "1", "2");
+        setValueStringStringMap(ssm, "2", "3");
+        setValueStringStringMap(ssm, "3", "4");
+        setValueStringStringMap(ssm, "3", "5");
+        setValueStringStringMap(ssm, "2", "4");
+        char *res = printStringStringMap(ssm);
+        printf("res:%s\n", res);
+        printf("%d\n", getValueStringStringMap(ssm, "10", 0));
+        printf("%d\n", getValueStringStringMap(ssm, "2", 0));
+        printf("%d\n", getValueStringStringMap(ssm, "4", 0));
+        free(res);
+        freeStringStringMap(ssm);
+    }
+
+    {
+        struct StringVec *ssm = createStringVec();
+        pushStringVec(ssm, "1");
+        pushStringVec(ssm, "2");
+        pushStringVec(ssm, "3");
+        pushStringVec(ssm, "3");
+        pushStringVec(ssm, "2");
+        pushStringVec(ssm, "4");
+        pushStringVec(ssm, "5");
+        pushStringVec(ssm, "6");
+        pushStringVec(ssm, "7");
+        {
+            char *res = printStringVec(ssm);
+            printf("res:%s\n", res);
+            free(res);
+        }
+        freeStringStringMap(ssm);
     }
 }

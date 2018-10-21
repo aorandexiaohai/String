@@ -3,26 +3,47 @@
 #include <assert.h>
 #include "delete_pointer_to_pointer.h"
 
-char *trim_string(const char *str, char c)
+int find_char(const char* str, char c)
 {
     assert(str);
+    int len = strlen(str);
+    for(int index=0; index<len; index++)
+    {
+        if(c==str[index]) return index;
+    }
+    return -1;
+}
+
+char *trim_str_string(const char *str, char* trim_str)
+{
+    assert(str && trim_str);
+
     int len = strlen(str);
     int begin_index = 0;
     int end_index = len - 1;
     for (begin_index = 0; begin_index < len; ++begin_index)
     {
-        if (str[begin_index] != c)
+        if(find_char(trim_str, str[begin_index]) < 0)
             break;
     }
     for (end_index = len - 1; end_index >= begin_index; --end_index)
     {
-        if (str[end_index] != c)
+        if(find_char(trim_str, str[end_index]) < 0)
             break;
     }
     if (begin_index > end_index)
         return create_empty_string();
     else
         return get_string(str, begin_index, end_index + 1);
+
+}
+
+char *trim_string(const char *str, char c)
+{
+    char* tmp_str = create_string(c, 1);
+    char* res = trim_str_string(str, tmp_str);
+    free(tmp_str);
+    return res;
 }
 
 char *get_string(const char *str, int begin_index, int end_index)
