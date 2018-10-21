@@ -11,6 +11,7 @@ char *clone_string(const char *str);
 char *cat_string(const char *str1, const char *str2);
 char *create_string(char c, int len);
 char *create_empty_string();
+int is_empty_string(const char* str);
 
 //if str1 > str2, return > 0
 //if str1==str2, return=0;

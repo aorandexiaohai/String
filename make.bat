@@ -1,1 +1,1 @@
-gcc -std=c99 cstring.c -c && gcc -std=c99 main.c -c && gcc -std=c99 cstring.o main.o -o main.exe
+gcc -std=c99 cstring.c -c -g && gcc -std=c99 main.c -c -g && gcc -std=c99 cstring.o main.o -o main.exe -g

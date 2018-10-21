@@ -15,4 +15,20 @@
     }\
 }
 
+#define ShowPtoP(pp, BaseType)\
+{\
+    if(pp)\
+    {\
+        int index =0;\
+        do\
+        {\
+            BaseType* p = pp[index++];\
+            if(!p) break;\
+            printf("index:%d(%d,%d)\n", index, p[0],p[1]);\
+        }while(1);\
+    }\
+}
+
+
+
 #endif//__DELETE_POINTER_TO_POINTER_H_
