@@ -52,4 +52,9 @@ int main()
         printf("%d\n", compare_string(res, "123123"));
         free(res);
     }
+    {
+        char *res = replace_string("  ", "1234 ", "123");
+        printf("%d\n", compare_string(res, "  "));
+        free(res);
+    }
 }
