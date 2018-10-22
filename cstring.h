@@ -28,6 +28,8 @@ int **find_range_string(const char *origin_str,int begin, int end, const char *s
 char *replace_string(const char *origin_str, const char *old_str, const char *new_str);
 
 char** spliter_string(const char* origin_str, const char *str, int need_spliters);
+
 char* int2str(int value);
+int is_comment_string(char* str);
 
 #endif //__CSTRING_H_

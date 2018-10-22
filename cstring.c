@@ -314,3 +314,18 @@ char **spliter_string(const char *origin_str, const char *str, int need_spliters
 
     return result;
 }
+
+
+
+int is_comment_string(char* str)
+{
+    int res = 0;
+    assert(str);
+    char* line = trim_str_string(str, " \r\n\t");
+    if(!is_empty_string(line))
+    {
+        res = line[0]=='#';
+    }
+    free(line);
+    return res;
+}
